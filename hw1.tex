@@ -19,6 +19,9 @@
 
 \includegraphics[width=50mm]{grapha.png}
 
+\problem{Problem 2.} We first show that $c_1=1/2$. This is easy to see because in the worst case the algorithm chooses a path of length 1, and then if the matching is composed of a bunch of subgraphs consisting of an edge going from one side to the other and then an edge going from that node back to the first side (like a $<$ or $>$ shape), then we have $|M_1|/|M^{\ast}|=1/2$.
+
+On the second iteration, the algorithm picks blocking paths of size 2, and in the general $k$th step it picks blocking paths of size $k$. Hence the minimal matching is increasing by \emph{at least} 1 every iteration. We have $|M^{\ast}|$ as the least upper bound for $|M_k|$, so by a basic theorem of analysis, we must have $c_k\to 1$ as $k\to\infty$.
 
 \problem{Problem 4.} 
 \problempart{a} Fix a vertex $i \in L$ and let the event
@@ -35,3 +38,4 @@ P(A_k) = x_{ik}z_k^{-1}
 \]
 Because the events $A_k$ are not independent
 \end{document}
+
