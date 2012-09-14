@@ -25,6 +25,23 @@
 
 \problem{Problem 1.} The counterexample is the following graph:
 
+\begin{displaymath}
+\xygraph{
+!{<0cm,0cm>;<1cm,0cm>:<0cm,1cm>::}
+!{(-4,3) }*+{\bullet_{a}}="a"
+!{(0,3)}*+{\bullet_{b}}="b"
+!{(-4,1.5) }*+{\bullet_{c}}="c"
+!{(0,1.5) }*+{\bullet_{d}}="d"
+!{(-4,0) }*+{\bullet_{e}}="e"
+!{(0,0)}*+{\bullet_{f}}="f"
+"a"-"b" ^ {10} "a"-"d" ^ {1} "a"-"f" _ {1}
+"c"-"b" _ {1} "c"-"d" ^ {10} "c"-"f" ^ {1}
+"e"-"b" _ {1} "e"-"d" _ {1} "e"-"f" ^ {10}
+}
+\end{displaymath}
+
+This is the graph with the three horizontal edges having weight 10 and the other six edges having weight 1. 
+
 \problem{Problem 2.} Observe first that the following graph is the ``worst case'' in the sense that the Hopcroft-Karp algorithm creates the least efficient matching for it. We will proceed via an induction-like argument. Define a `z-shaped subgraph' to be one that looks like the following:
 
 \begin{displaymath}
