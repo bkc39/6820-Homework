@@ -30,8 +30,24 @@
 \problem{Problem 1.} \\
 The counterexample is the following graph:
 
-\problem{Problem 2.} \\
-Observe first that the following graph is the ``worst case'' in the sense that the Hopcroft-Karp algorithm creates the least efficient matching for it. We will proceed via an induction-like argument. Define a `z-shaped subgraph' to be one that looks like the following:
+\begin{displaymath}
+\xygraph{
+!{<0cm,0cm>;<1cm,0cm>:<0cm,1cm>::}
+!{(-4,3) }*+{\bullet_{a}}="a"
+!{(0,3)}*+{\bullet_{b}}="b"
+!{(-4,1.5) }*+{\bullet_{c}}="c"
+!{(0,1.5) }*+{\bullet_{d}}="d"
+!{(-4,0) }*+{\bullet_{e}}="e"
+!{(0,0)}*+{\bullet_{f}}="f"
+"a"-"b" ^ {2} "a"-"d" ^ {1} "a"-"f" _ {1}
+"c"-"b" _ {1} "c"-"d" ^ {2} "c"-"f" ^ {1}
+"e"-"b" _ {1} "e"-"d" _ {1} "e"-"f" ^ {2}
+}
+\end{displaymath}
+
+This is the graph with the three horizontal edges having weight 2 and the other six edges having weight 1. 
+
+\problem{Problem 2.} Observe first that the following graph is the ``worst case'' in the sense that the Hopcroft-Karp algorithm creates the least efficient matching for it. We will proceed via an induction-like argument. Define a `z-shaped subgraph' to be one that looks like the following:
 
 \begin{displaymath}\xygraph{
 !{<0cm,0cm>;<1cm,0cm>:<0cm,1cm>::}
@@ -52,7 +68,43 @@ Then it is easy to see that $c_1=1/2$, because in the worst case the algorithm f
 On the second iteration, the algorithm picks blocking paths of size 2, and in the general $k$th step it picks blocking paths of size $k$. Hence the minimal matching is increasing by \emph{at least} 1 every iteration. We have $|M^{\ast}|$ as the least upper bound for $|M_k|$, so by a basic theorem of analysis, we must have $c_k\to 1$ as $k\to\infty$.
 
 \problem{Problem 3} \\
-The plan of attack for this algorithm is to reduce the half-integral matching problem to a bipartite matching problem and use the Hopkroft-Karp algorithm to find a maximum bipartite matching and then translate the resulting matching to a maximum size half integral matching in the original graph. As an input we are given a graph $\Gamma = (V,E)$. Each edge $e \in E$ has a weight $w(e) \in \{0, 1/2, 1\}$
+The plan of attack for this algorithm is to reduce the half-integral matching problem to a bipartite matching problem and use the Hopkroft-Karp algorithm to find a maximum bipartite matching and then translate the resulting matching to a maximum size half integral matching in the original graph.
+
+As an input we are given a graph $\Gamma = (V,E)$. We will construct a bipartite graph $\Gamma'$ from $\Gamma$ as follows:
+\begin{enumerate}
+\item For each $v \in V$ create two new vertices $x_v$ and $y_v$ in $\Gamma'$
+\item For each $e = (u,v) \in E$ we add the edges $(x_u,y_v), (x_v, y_u)$ in $\Gamma'$ 
+\end{enumerate}
+
+We are then left with a bipartite graph $\Gamma'$ containing $2|V|$ vertices and $2|E|$ edges. The next step is to run the Hopcroft-Karp algorithm on $\Gamma'$. This will return a maximum matching $M' \subset \Gamma'$, which we will translate to a maximum size matching $M$ in $\Gamma$ via the following process
+\begin{enumerate}
+\item For each edge $(x_u,x_v) \in M'$ we add weight $1/2$ to the edge $(u,v)$ in $\Gamma$. 
+\item Return $M$ as the set of edges with non-zero weight. 
+\end{enumerate}
+
+For the runtime analysis of the above algorithm we have that given the graph $\Gamma$, constructing the bipartite graph $\Gamma'$ can be done in $O(2(m+n))$ time. Executing the Hopcroft-Karp algorithm on $\Gamma'$ is an additional $O(m\sqrt{n})$. And then the translation from the resulting matching $M'$ back to $M$ can be achieved in $O(2m)$. Hence, the dominating term in the analysis is the Hopkroft-Karp step giving a final runtime of 
+\[
+O((m+n) + m\sqrt{n} + m) = O(m\sqrt{n}) = O(mn)
+\]
+
+We proceed to the proof of correctness. There are a few key facts that need to be checked. The first is the following\\
+
+\begin{claim}
+The matching $M' \subset \Gamma'$ translates to a valid matching $M \subset \Gamma$ 
+\end{claim}
+\begin{proof}
+Consider the matching $M \subset \Gamma$. If we take a $v \in M$ then we see that the translation process yields two vertices $x_v, y_v$ in $\Gamma'$. Because $M'$ is a perfect matching in $\Gamma'$ each of these vertices has degree at most 1, for a total degree of 2. As a result of this fact, we add at most weight $1$ to edges incident to $v$ in $\Gamma$ during the translation process because each edge in $\Gamma'$ contributes at most 1/2. This means that the total weighted in-degree of $v$ is at most 1, and a multiple of 1/2. Hence, $M$ is a valid matching in $\Gamma$.
+\end{proof}
+
+Now that we know that the proposed matching $M$ is valid, we are still left to see that \\
+
+\begin{claim}
+$M$ is a maximum size matching in $\Gamma$
+\end{claim}
+\begin{proof}
+We know that $M$ was obtained from some maximum matching $M' \subset \Gamma'$ via the translation process described in the algorithm. And furthermore, every matching $M^* \subset \Gamma'$ can be translated to some matching $M^\ell$ in $\Gamma$, that is to say that the translation process is onto. The second thing to notice about the translation process is that it preserves the relative matching costs, or that $|M'| = 2|M|$, which holds by construction. Using this relative ordering, we can see that if $M$ were not a maximum size matching then there would be some $M^\ell$ with $|M| < |M^\ell|$ and hence, its pre-translation in the algorithm would me some matching $M^L \subset \Gamma'$ with $M^L = 2|M^\ell| > 2|M| = |M'|$. But $M'$ is a maximum matching in $\Gamma'$ because it is the result of a valid Hopcroft-Karp execution. This contradiction establishes that $M$ is maximum size.   
+\end{proof}
+These two claims complete the proof of correctness. 
 
 \problem{Problem 4.} \\
 \problempart{a} Fix a vertex $i \in L$. We want to compute the probability that $i$ will be chosen by the stateless rounding procedure. If we denote this event by 
@@ -61,7 +113,7 @@ M = \{\text{vertex } i \text{ is chosen by the stateless rounding procedure}\}
 \]
 and let $N$ be its complement. Our goal is to compute $P(M)$. We will do this by computing $1 - P(N)$. We begin by noting that if we let 
 \[
-N_j = \{\text{vertex } i \text{ is chosen when vertex } j \text{ arrives}\}
+N_j = \{\text{vertex } i \text{ is not chosen when vertex } j \text{ arrives}\}
 \]
 Then $N = \cap_{j \in R} N_j$. We can see that
 \[
