@@ -1,11 +1,16 @@
 \documentclass{article}
 \usepackage{amsmath,amsfonts,amsthm,fancyhdr,parskip,amssymb,graphicx}
+\usepackage[all]{xy}
 \usepackage[margin = 1.5in]{geometry}
 \pagestyle{fancy}
 \lhead{Ben Carriel (bkc39)}
 \chead{Bryan Cuccioli (blc72)}
 \rhead{Andy Levine (awl58)}
 \setlength{\parindent}{1cm}
+
+\DeclareMathOperator{\Z}{\mathbb{Z}}
+\DeclareMathOperator{\Q}{\mathbb{Q}}
+\DeclareMathOperator{\R}{\mathbb{R}}
 
 \DeclareMathOperator{\oh}{\mathcal{O}}
 \DeclareMathOperator{\ta}{\xrightarrow{\ \ \ }}
@@ -22,12 +27,13 @@
 
 \begin{document}
 
-\problem{Problem 1.} The counterexample is the following graph:
+\problem{Problem 1.} \\
+The counterexample is the following graph:
 
-\problem{Problem 2.} Observe first that the following graph is the ``worst case'' in the sense that the Hopcroft-Karp algorithm creates the least efficient matching for it. We will proceed via an induction-like argument. Define a `z-shaped subgraph' to be one that looks like the following:
+\problem{Problem 2.} \\
+Observe first that the following graph is the ``worst case'' in the sense that the Hopcroft-Karp algorithm creates the least efficient matching for it. We will proceed via an induction-like argument. Define a `z-shaped subgraph' to be one that looks like the following:
 
-\begin{displaymath}
-\xygraph{
+\begin{displaymath}\xygraph{
 !{<0cm,0cm>;<1cm,0cm>:<0cm,1cm>::}
 !{(0,0) }*+{\bullet_{a}}="a"
 !{(1.5,0) }*+{\bullet_{b}}="b"
@@ -43,55 +49,62 @@ For $K_{2,2}$, then it is clear that the z-shaped subgraph is the worst case, be
 
 Then it is easy to see that $c_1=1/2$, because in the worst case the algorithm first chooses a path of length 1, and so in the worst case graph described above we have $|M_1|/|M^{\ast}|=1/2$.
 
-
-
 On the second iteration, the algorithm picks blocking paths of size 2, and in the general $k$th step it picks blocking paths of size $k$. Hence the minimal matching is increasing by \emph{at least} 1 every iteration. We have $|M^{\ast}|$ as the least upper bound for $|M_k|$, so by a basic theorem of analysis, we must have $c_k\to 1$ as $k\to\infty$.
 
-\problem{Problem 4.} 
-\problempart{a} Fix a vertex $i \in L$ and let the event
+\problem{Problem 3} \\
+The plan of attack for this algorithm is to reduce the half-integral matching problem to a bipartite matching problem and use the Hopkroft-Karp algorithm to find a maximum bipartite matching and then translate the resulting matching to a maximum size half integral matching in the original graph. As an input we are given a graph $\Gamma = (V,E)$. Each edge $e \in E$ has a weight $w(e) \in \{0, 1/2, 1\}$
+
+\problem{Problem 4.} \\
+\problempart{a} Fix a vertex $i \in L$. We want to compute the probability that $i$ will be chosen by the stateless rounding procedure. If we denote this event by 
 \[
-A_j = \{\text{vertex } i \text{ is matched with vertex } j \in R\}
-\] 
-Let's call a vertex matched if the edge $(i,j)$ is in the output of the stateless rounding procedure. Then 
-\[
-P(\{\text{vertex } i \text{ is matched}\}) = P( \bigcup_{j\in R} A_j )
+M = \{\text{vertex } i \text{ is chosen by the stateless rounding procedure}\}
 \]
-For a single event $A_k$ we have that 
+and let $N$ be its complement. Our goal is to compute $P(M)$. We will do this by computing $1 - P(N)$. We begin by noting that if we let 
 \[
-P(A_k) = x_{ik}z_k^{-1}
+N_j = \{\text{vertex } i \text{ is chosen when vertex } j \text{ arrives}\}
 \]
-But, because the events $A_k$ are not independent, we need to use the principle of inclusion-exclusion. This gives that
+Then $N = \cap_{j \in R} N_j$. We can see that
 \[
-P( \bigcup_{j\in R} A_j ) = \sum_{j \in R} (-1)^nP(\bigcap_{\substack{A \in S \\ |S| \leq |R| }}A)
+P(N_j) = 1 - x_{ij}z_j^{-1} \leq 1 - x_{ij}
 \]
-Where $S$ is some subset of $R$. In order to compute the terms on the right side of the equation we will use the following \\
+where the inequality holds because $z_j \leq 1$. This means that 
+\[
+P(N) = P(\bigcap_{j\in R} N_j) = \prod_{j\in R} P(N_j) \leq \prod_{j\in R} (1 - x_{ij}) 
+\]
+We will then use the following \\
 \begin{lem}
-For a given vertex $i \in L$ and any subset $S \subset R$ with $|S| = k$ we have that 
+For each $x \in \R$ we have that 
 \[
-P(\bigcap_{j=1}^k A_j) \leq z_j^{-k}\prod_{j=1}^k x_{ij}
+1-x \leq e^{-x}
 \]
 \end{lem}
 \begin{proof}
-We proceed by induction on $k$. In the case $k=1$ we have that $S = \{A_\ell\}$ for some $\ell$ and so 
-\[
-P(S) = P(A_k) = x_{ij}/z_j 
-\]
-by definition. Moving on, suppose that for $|S| = n-1$ we have that 
-\[
-P(\bigcap_{j=1}^{n-1} A_j) \leq z_j^{(1-n)} \prod_{j=1}^{n-1}x_{ij}
-\] 
-If we take $S' = S \cup \{x_n\}$ for some $x_n \in R$ then we get
-\begin{align*}
-P(\bigcap_{j=1}^{n} A_j) &\leq P(\bigcap_{j=1}^{n-1} A_j)P(A_n) \\
-&\leq \left(z_j^{(1-n)} \prod_{j=1}^{n-1}x_{ij}\right)(x_{in}z_j^{-1}) \\
-&\leq z_j^{-n}\prod_{j=1}^n x_{ij}
-\end{align*}
-This completes the induction.
+Consider the function $f(x) = e^{-x} + x - 1$. Then if $f(x) > 0$ for every $x$, we are done. If we take the derivative we see that $f'(x) = -e^{-x} + 1$, which has a critical point at $x = 0$. We then take the second derivative to reveal that $f''(x) = e^{-x} > 0$ for all $x$. This means that $f$ has a minimum at $f(0) = 0$, meaning that $f > 0$.  
 \end{proof}
-With the lemma in hand we can evaluate the probability that the vertex $i$ is matched with 
-\begin{align*}
-P( \bigcup_{j\in R} A_j ) &= \sum_{j \in R} (-1)^nP(\bigcap_{\substack{A \in S \\ |S| \leq |R| }}A) \\
-&\leq \sum_{j \in R} (-1)^n 
-\end{align*}
+Using this lemma we can see that
+\[
+P(N) = \prod_{j\in R} (1 - x_{ij})  \leq \prod_{j\in R} e^{-x_{ij}}
+\]
+If we let $s = \sum_{j\in R}x_{ij}$ then $P(N) = e^{-s}$. In order to finally compute $P(M)$ we need one more \\
+\begin{lem}
+For $x \in [0, 1]$ we have 
+\[
+1 - e^{-x} \geq \frac{e-1}{e}x
+\]
+\end{lem}
+\begin{proof}
+This is similar to the previous lemma. This time we set $f(x) = 1 - e^{-x} - (1-1/e)x$ which has derivative $f'(x) = e^{-x} - 1 + e^{-1}$. The critical point occurs at $x_0 = 1 - \log(-1 + e)$, and if we look at the second derivative $f''(x) = -e^{-x}$ then we see that $x_0$ is a local maximum and that $f$ is non-negative on $[0,1]$. This gives the result.
+\end{proof}
+Finally, we can use this lemma to see that
+\[
+P(M) = 1 - P(N) \geq 1 - e^{-s} \geq (1 - 1/e)s 
+\]
+Substituting for $s$ gives the final result
+\[
+P(M) \geq 1 - 1/e)\sum_{j\in R} x_{ij}
+\]
+and we are done.
+
+\problempart{b} 
 
 \end{document}
