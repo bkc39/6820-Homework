@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage{amsmath,amsfonts,fancyhdr,parskip,amssymb,amsthm,graphicx}
+\usepackage{amsmath,amsfonts,amsthm,fancyhdr,parskip,amssymb,graphicx}
 \usepackage[margin = 1.5in]{geometry}
 \usepackage[all]{xy}
 \pagestyle{fancy}
@@ -67,8 +67,35 @@ But, because the events $A_k$ are not independent, we need to use the principle 
 \[
 P( \bigcup_{j\in R} A_j ) = \sum_{j \in R} (-1)^nP(\bigcap_{\substack{A \in S \\ |S| \leq |R| }}A)
 \]
-Where $S$ is some subset of $R$. In order to compute the terms on the right side of the equation we will use the following. 
-
+Where $S$ is some subset of $R$. In order to compute the terms on the right side of the equation we will use the following \\
+\begin{lem}
+For a given vertex $i \in L$ and any subset $S \subset R$ with $|S| = k$ we have that 
+\[
+P(\bigcap_{j=1}^k A_j) \leq z_j^{-k}\prod_{j=1}^k x_{ij}
+\]
+\end{lem}
+\begin{proof}
+We proceed by induction on $k$. In the case $k=1$ we have that $S = \{A_\ell\}$ for some $\ell$ and so 
+\[
+P(S) = P(A_k) = x_{ij}/z_j 
+\]
+by definition. Moving on, suppose that for $|S| = n-1$ we have that 
+\[
+P(\bigcap_{j=1}^{n-1} A_j) \leq z_j^{(1-n)} \prod_{j=1}^{n-1}x_{ij}
+\] 
+If we take $S' = S \cup \{x_n\}$ for some $x_n \in R$ then we get
+\begin{align*}
+P(\bigcap_{j=1}^{n} A_j) &\leq P(\bigcap_{j=1}^{n-1} A_j)P(A_n) \\
+&\leq \left(z_j^{(1-n)} \prod_{j=1}^{n-1}x_{ij}\right)(x_{in}z_j^{-1}) \\
+&\leq z_j^{-n}\prod_{j=1}^n x_{ij}
+\end{align*}
+This completes the induction.
+\end{proof}
+With the lemma in hand we can evaluate the probability that the vertex $i$ is matched with 
+\begin{align*}
+P( \bigcup_{j\in R} A_j ) &= \sum_{j \in R} (-1)^nP(\bigcap_{\substack{A \in S \\ |S| \leq |R| }}A) \\
+&\leq \sum_{j \in R} (-1)^n 
+\end{align*}
 
 \end{document}
 
