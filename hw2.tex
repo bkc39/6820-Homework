@@ -29,13 +29,77 @@
 
 \problem{Problem 1.}
 
-\problempart{a.} 
+\problempart{a} This is straightforward. The only step in the algorithm that ever changes the capacities of the edges in the residual graph is an augmentation step. But we assumed that all of the edges had $0,1$ capacity and we only subtract values so it is clear that the remaining edges have residual capacity $-1,0,1$. But we couldn't have subtracted $1$ from $0$, because if $e_1$ is a capacity 0 edge, then it will not be in any $s-t$ augmenting path, because no flow can pass through it. Hence, we can only subtract one from edges that had capacity 1 and so we still have $0-1$ edge capacities. 
 
-\problempart{b.}
+\problempart{b} Trace some augmenting path (via successive advance steps). The flow through any augmenting path must be 1, and hence each edge in such a path is saturated, and also a bottleneck. This means that every retreat step deletes an edge. The total number of possible deletes is bounded above by the number of edges in the graph. And so we have that the total amount of time to compute a blocking set of flows in $O(m)$.
 
-\problempart{c.}
+\problempart{c} Suppose that the value of the max-flow in the graph, $f^*$, is less than $m^{1/2}$ then the result is clear because we have that 
+\[
+\ell \leq \frac{m}{\ell} \leq m^{1/2}
+\]
+where $\ell$ is the length of the longest path. Now we consider the case where $f^* > m^{1/2}$. We want to look at the phase where we have equality, that is when $f = f^* - m^{1/2}$. At this stage we have that the flow is $f < f^* - m^{1/2}$ when the level graph for this phase is constructed. Observe that at this point the level graph is the same as the initial level graph in the residual flow network $G_f$ and so we have that the maximum flow in this residual graph is
+\[
+f^* - f > f^* - (f^* - m^{1/2}) = m^{1/2}
+\]
+Now we can say the same as the first case
+\[
+\ell < \frac{m}{f^*} \leq m^{1/2}
+\]
+At this point we can have gone through at most $m^{1/2} - 1$ and then the number of remaining phases is at most $m^{1/2}$ and so the total number of phases is at most $2m^{1/2} = O(m^{1/2})$.
 
-\problempart{d.}
+\problempart{d} Suppose that the max flow in the graph is $f^* \leq n^{2/3}$, then the bound is obvious and has the same argument as in Part(c). If not, we follow the same proof outline as before, at the phase where the flow reaches the value $f^* - n^{2/3}$ we let $f$ be the flow at the point that we construct the level graph for this phase. As before, this level graph is identical to the level graph at the start of the next phase. The one key difference is that now we may have parallel edges between pairs of vertices. This leads us to the following\\
+
+\begin{lem}
+Let $f$ be a flow in $G$ and let $f^*$ be the maximum flow in $G$. Then the maximum flow in the next phase of Dinic's algorithm on $G$ is $f^* - f$. 
+\end{lem}
+\begin{proof}
+Let $G'$ be the graph in the next phase of Dinic's algorithm (i.e. what remains after an Augment step). Then we must have that for any cut $k = (A,B)$ with $s\in A, t\in B$ that
+\[
+\sum_{e\in k'} c'(e) = \left(\sum_{e_1 \in k} c(e_1) - f(e_1)\right) + \sum_{e_2 \in k_{AB}} f(e_2) 
+\]
+Where $k'$ is the cut after passing the augment step, $c'(e)$ is the new capacity after an augment step (residual capacity) and$k_{AB}$ are the edges in the cut containing vertices in both $A$ and $B$ (edges across the cut). But note that
+\[
+f = \sum_{e \in k} f(e) - \sum_{e' \in k_{AB}} f(e')
+\] 
+And so
+\[
+\sum_{e \in k'} c'(e) = \sum_{e' \in k} c(a) - f
+\]
+So the minimum cuts are preserved after passing through a phase of the algorithm. We then apply the max-flow min-cut theorem to see that the value of the minimum cut is also $f^*$ in $G'$. So the value of a min-cut in $G'$ is $f^* - f$ and so we have that the maximum flow must also be $f^* - f$ by the min-cut theorem.
+\end{proof}
+
+We can apply the lemma to see that the max-flow in the beginning of the next phase is at least $n^{2/3}$. Then we move to the following \\
+\begin{lem}
+Let $G$ be a flow graph with max flow $f^*$. Then the minimum length $s-t$ when the flow is identically zero is $2\sqrt{2}n/\sqrt{f^*}$
+\end{lem}
+\begin{proof}
+Consider the set $V_d$ of vertices of distance $d$ away from $s$ in $G$. If there are no parallel edges in $G$ then 
+\[
+f^* \leq |V_d|\cdot|V_{d+1}| 
+\]
+In the other case we have that there may be twice as many edges so the right wide must be multiplied by a factor of $2$. Then note that either we have
+\[
+|V_d| \geq 2^{-1/2}(f^*)^{1/2} \text{ or } |V_{d+1}| \geq 2^{-1/2}(f^*)^{1/2}
+\]
+If $\ell$ is the length of the minimum path then we have 
+\[
+\sum_{d=0}^{\ell} |V_d| \leq n
+\]
+which means that
+\[
+\left\lfloor \frac{l+1}{1}\right\rfloor 2^{-1/2}(f^*)^{1/2} \leq n
+\]
+Giving $\ell \leq 2\sqrt{2}n/\sqrt{f^*}$
+\end{proof}
+We then apply the lemma to see that 
+\[
+\ell \leq \frac{2\sqrt{2}n}{\sqrt{n^{2/3}}} = 2\sqrt{2}n^{2/3}
+\]
+So the number of phases is at this point was $O(n^{2/3})$ and the number of phases to termination of the algorithm is at most $n^{2/3}$ we have that the total number of phases is $O(n^{2/3})$. As a result of this the total runtime of Dinic's Algorithm on $G$ with $0-1$ edge capacities is
+\[
+O(m\min\{m^{1/2}, n^{2/3}\})
+\]
+
 
 \problem{Problem 2.}
 
