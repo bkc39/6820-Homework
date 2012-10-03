@@ -29,7 +29,7 @@
 
 \problem{Problem 1.}
 
-\problempart{a.}
+\problempart{a.} 
 
 \problempart{b.}
 
@@ -38,6 +38,12 @@
 \problempart{d.}
 
 \problem{Problem 2.}
+
+We will construct a flow network $G$ with every edge having capacity 0 or 1. Assign capacity 1 to all pairs of nodes linked by edges in $G$ and 0 to the other pairs. Then each source in $A\cup B$ can only produce a flow of 1; we specify this by creating a super source $s^{\ast}$ with edges of capacity 1 into each source of $A\cup B$.
+
+Now, augment the network by all augmenting paths starting from nodes in $A$ which give a flow $|A|$. This flow is suboptimal since there is possible flow at least $|B|>|A|$. Let $G_f$ be the residual graph induced by this flow. There is an edge-disjoint path to every node in $A$ from $t$ now that we have augmented these paths.
+
+Moreover, there must now exist some augmenting path $p$, since our flow is sub-optimal. But each node in $A$ has only 1 unit of flow to push, so $p$ must originate from a node in $B\setminus A$. Denote this node $s$. Augmenting by $p$ gives an edge disjoint path from $t$ to every node in $A\cup\{s\}$ in $G_f$, and it follows that in $G$ there are edge-disjoint paths to $t$ for every $n\in A\cup\{s\}$.
 
 \problem{Problem 3.}
 
