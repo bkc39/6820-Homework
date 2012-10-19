@@ -11,6 +11,7 @@
 \DeclareMathOperator{\Z}{\mathbb{Z}}
 \DeclareMathOperator{\Q}{\mathbb{Q}}
 \DeclareMathOperator{\R}{\mathbb{R}}
+\DeclareMathOperator{\LP}{\mathrm{{\bf LP}}}
 
 \DeclareMathOperator{\oh}{\mathcal{O}}
 \DeclareMathOperator{\ta}{\xrightarrow{\ \ \ }}
@@ -74,7 +75,22 @@ The problem with this LP is that the number of cuts, and therefore the number of
 \max \sum_{e \in G} 
 \end{align*}
 \problem{Problem 3.}
-\problempart{a}
 
-\problempart{b}
+\problempart{a} 
+
+\problempart{b} In the worst case, our randomized algorithm swaps in all remaining $i$ constraints at the $n-i$ step. Therefore, for each constraint, the runtime is bounded by the sum
+\[\sum_{i=1}^n \binom{n}{i} T(n-i).\]
+Moreover, we have $T(n-i)<\log(n)T(n-(i+1))$, i.e. each $T(n)$ makes at most $\log(n)$ calls to the $T$ before it, so we have
+\begin{align*}\sum_{i=1}^n \binom{n}{i} T(n-i)&<\sum_{i=1}^n \binom{n}{i}\log(n) T(n-(i+1))\\
+&\hspace{2cm}\vdots\\
+&<\sum_{i=1}^n \binom{n}{i} \prod_{j=1}^n \log(j)\\
+&=\sum_{i=1}^n \binom{n}{i} \log\left(\sum_{j=1}^{n} j\right)\\
+&=\sum_{i=1}^n \binom{n}{i} \log\left(\frac{n(n+1)}{2}\right)\\
+&<2\sum_{i=1}^n \binom{n}{i} \log(n).\end{align*}
+
+Moreover, we clearly have
+\[\binom{n}{i}=\frac{n!}{i!(n-i)!}<\frac{(n\log n)!}{i!(n\log n - i)!} = \binom{n\log n}{i},\]
+since we are adding in more factors to the numerator than the denominator. Therefore, we have
+\[\sum_{i=1}^n \binom{n}{i} T(n-i) < 2\sum_{i=1}^n \binom{n\log n}{i} = 2\cdot 2^{n\log n} \in 2^{\mathcal{O}(n\log n)}.\]
+
 \end{document}
