@@ -63,17 +63,34 @@ TODO
 \end{proof}
 
 \problempart{b}
-The primal LP is as follows
-
+We begin by rephrasing the LP in terms of the cuts in the graph. 
 \begin{align*}
 \min \sum_{e \in G} x_ep_e \\
 \forall i, \forall (A,B) \text{ such that } s_i \in A, t_i \in B, \sum_{e \in A \times B} x_e \\
 \forall e \in G,  x_e \geq 0
 \end{align*}
-The problem with this LP is that the number of cuts, and therefore the number of constraints, is exponential. To remedy this, we consider the dual LP given by
+The problem with this LP is that the number of cuts, and therefore the number of constraints, is exponential. To remedy this, begin by ordering the subsets of $G$, by $S = \{G_1, G_2, \ldots, G_{2^{|G|}}\}$. Then we create dual variables $y_j$ for each of the subsets $S \times S$ that correspond to a valid cut in $G$ and let $\{S_j\}_{j=1}^k$ where $k$ is the number of cuts in $G$.  
 \begin{align*}
-\max \sum_{e \in G} 
+\max \sum_{e \in G} y_j \\
+\forall e \in G, \sum_{e \in S_j} \frac{y_j}{\mathcal{O}(j)} \leq p_e \\
+y_j \geq 0 
 \end{align*}
+where $\mathcal{O}(j)$ is the maximum constraint $C_i$ that is imposed on the edge $e$. We have transposed the problem in such a way that we now have exponentially many variables, but polynomially many constraints. We now seek to apply the PST framework on this revised LP. We construct an oracle as follows:
+\begin{align*}
+\min \sum_{e\in E} w_e \sum_{e\in S_j} \frac{y_j}{p_e}\cdot \frac{1}{\mathcal{O}(j)} \\
+\min \sum_{S_j} \frac{y_j}{\mathcal{O}_j} \sum_{e \in S_j} \frac{w_e}{p_e}
+\end{align*}
+The goal is to use to assign weights to each edge using the above oracle in an instance of HEDGE($\epsilon$). We then have the following subroutine
+
+\begin{enumerate}
+\item UPDATE
+\item assign weights $w_i$ using HEDGE($\epsilon$)
+\item assign $y_j$ to maximize $w^tAy$ where we can compute $y$ by running a max-flow algorithm (Dinic's) for each cut $S_j$
+\item 
+\item
+\end{enumerate}
+We then loop through the UPDATE step. 
+
 \problem{Problem 3.}
 
 \problempart{a} 
