@@ -87,7 +87,9 @@ We then loop through the UPDATE step.
 
 \problem{Problem 3.}
 
-\problempart{a} 
+\problempart{a} Observe that if our set of constraints is linearly independent, then they span all of $\R^m$, meaning that the convex hull is unbounded. We can check if they are linearly independent by checking if the determinant of the corresponding matrix is nonzero, and this determinant can be computed in $\mathcal{O}(m^3)$.
+
+Therefore, in the loop, we check linear independence. If it holds, we output \texttt{unbounded} and halt. Otherwise, we simply continue.
 
 \problempart{b} In the worst case, our randomized algorithm swaps in all remaining $i$ constraints at the $n-i$ step. Therefore, for each constraint, the runtime is bounded by the sum
 \[\sum_{i=1}^n \binom{n}{i} T(n-i).\]
@@ -103,5 +105,7 @@ Moreover, we clearly have
 \[\binom{n}{i}=\frac{n!}{i!(n-i)!}<\frac{(n\log n)!}{i!(n\log n - i)!} = \binom{n\log n}{i},\]
 since we are adding in more factors to the numerator than the denominator. Therefore, we have
 \[\sum_{i=1}^n \binom{n}{i} T(n-i) < 2\sum_{i=1}^n \binom{n\log n}{i} = 2\cdot 2^{n\log n} \in 2^{\mathcal{O}(n\log n)}.\]
+
+Therefore, since we have in the worst case this recurrence for every $m$, the algorithm is bounded above by $2^{\mathcal{O}(n\log n)}\cdot m$.
 
 \end{document}
