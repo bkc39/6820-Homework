@@ -44,9 +44,37 @@ This is an LP and can be solved with the simplex algorithm. The augment step of 
 
 Furthering the analogy, when the pivots take place, the entering variable is the flow being pushed on the bottleneck edge, and the leaving variable is the flow on that edge in the residual graph, which is clear.
 
-\problem{Problem 2.}
+\problem{Problem 2.} 
 
+\problempart{a} Here is the formulation of the multi-commodity flow problem as a linear program:
+\begin{align*}
+\min \sum_{e\in G} x_ep_e \\
+\forall v \in G, \sum_{e = (u,v)} x_e = \sum_{e' = (v,w)} x_{e'} \\
+\forall i, \sum_{e = (s_i, v)} x_e \geq C_i \\
+\forall e \in G, x_e \geq 0
+\end{align*}
+To see that this formulation is correct we verify the following
+\begin{claim}
+The solution $\vec{x}$ to this linear program corresponds to the minimum bandwidth assignments in the given network problem. 
+\end{claim}
+\begin{proof}
+TODO
+\end{proof}
 
+\problempart{b}
+The primal LP is as follows
+
+\begin{align*}
+\min \sum_{e \in G} x_ep_e \\
+\forall i, \forall (A,B) \text{ such that } s_i \in A, t_i \in B, \sum_{e \in A \times B} x_e \\
+\forall e \in G,  x_e \geq 0
+\end{align*}
+The problem with this LP is that the number of cuts, and therefore the number of constraints, is exponential. To remedy this, we consider the dual LP given by
+\begin{align*}
+\max \sum_{e \in G} 
+\end{align*}
 \problem{Problem 3.}
+\problempart{a}
 
+\problempart{b}
 \end{document}
