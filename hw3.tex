@@ -80,10 +80,8 @@ The goal is to use to assign weights to each edge using the above oracle in an i
 \item UPDATE
 \item assign weights $w_i$ using HEDGE($\epsilon$)
 \item assign $y_j$ to maximize $w^tAy$ where we can compute $y$ by running a max-flow algorithm (Dinic's) for each cut $S_j$
-\item 
-\item
 \end{enumerate}
-We then loop through the UPDATE step. 
+We then loop through the UPDATE step $\rho (\log (n)/\epsilon^2)$ (modification of the notes by Kleinberg where $\rho$ is some polynomial in $\sum C_i$). By the discussion in those notes, this will return a (1-$\epsilon$)-appoximation to the dual solution. We then translate this to a solution to the primal LP by translating each of the output $y_j$ to their corresponding $x_i$ values. The difficulty is that this will not be a feasible solution to the problem. Thus, we scale the problem up by the amount such that we satisfy the minimum $C_i$ constraint on each edge (this is the width as given in the problem). This gives a $(1+\epsilon)$-approximation to the primal algorithm.  
 
 \problem{Problem 3.}
 
