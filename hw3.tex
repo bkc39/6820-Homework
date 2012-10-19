@@ -54,13 +54,7 @@ Furthering the analogy, when the pivots take place, the entering variable is the
 \forall i, \sum_{e = (s_i, v)} x_e \geq C_i \\
 \forall e \in G, x_e \geq 0
 \end{align*}
-To see that this formulation is correct we verify the following
-\begin{claim}
-The solution $\vec{x}$ to this linear program corresponds to the minimum bandwidth assignments in the given network problem. 
-\end{claim}
-\begin{proof}
-TODO
-\end{proof}
+This simply minimizes the bandwidth (first line) of all valid flows (line 2) such that each flow out of the source is large enough (line 3), and each edge has non-negative bandwidth on it (last line). 
 
 \problempart{b}
 We begin by rephrasing the LP in terms of the cuts in the graph. 
